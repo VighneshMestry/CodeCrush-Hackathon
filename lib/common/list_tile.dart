@@ -36,7 +36,7 @@ class _CustomListTileState extends State<CustomListTile> {
       padding: const EdgeInsets.all(8),
       child: Row(
         children: [
-          const SizedBox(width: 10,),
+          // const SizedBox(width: 10,),
           Container(
             width: 100,
             height: 100,
@@ -62,7 +62,7 @@ class _CustomListTileState extends State<CustomListTile> {
                   RichText(
                       text: TextSpan(children: [
                     const TextSpan(
-                        text: "Order Id: ",
+                        text: "Id: ",
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
@@ -150,7 +150,14 @@ class _CustomListTileState extends State<CustomListTile> {
                     onPressed: () async {
                       await _launchUrl(widget.url);
                     },
-                    child: const Text("Get Location"),
+                    child: 
+                    Row(
+                      children: const [
+                        Icon(Icons.location_on, size: 20,),
+                        SizedBox(width: 5,),
+                        const Text("Get Location"),
+                      ],
+                    ),
                   ),
                   const SizedBox(
                     width: 5,

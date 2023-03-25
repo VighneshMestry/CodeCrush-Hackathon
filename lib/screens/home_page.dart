@@ -1,6 +1,9 @@
+import 'dart:developer';
+
 import 'package:codecrush_hackathon/common/list_tile.dart';
 import 'package:codecrush_hackathon/model/product_model.dart';
 import 'package:codecrush_hackathon/screens/product_screen.dart';
+import 'package:codecrush_hackathon/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:searchbar_animation/const/dimensions.dart';
 import 'package:searchbar_animation/searchbar_animation.dart';
@@ -18,16 +21,35 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   TextEditingController editingController = TextEditingController();
 
+  AuthService authService = AuthService();
+
+  var _fetchProducts;
+
+  Future<List<ProductDetails>> getTrackers() async {
+    List<ProductDetails> products = [];
+    try {
+      var response = await authService.getTrackers() as List;
+
+      products = response.map((e) => ProductDetails.fromJson(e)).toList();
+      log(products.toString());
+
+    } catch (e) {
+      log(e.toString());
+      throw Exception();
+    }
+
+    return products;
+  }
+
   final mainListItems = ['1', '2', '3', '4', '5'];
 
-  void fillSearchList() {}
-
-  // var items = List<String>();
   var displayingListItem = [];
 
   @override
   void initState() {
     displayingListItem.addAll(mainListItems);
+    _fetchProducts = getTrackers();
+    log(_fetchProducts.toString());
     super.initState();
   }
 
@@ -73,7 +95,10 @@ class _HomePageState extends State<HomePage> {
               isOriginalAnimation: true,
               trailingWidget: const Icon(Icons.close),
               secondaryButtonWidget: const Icon(Icons.close),
-              buttonWidget: const Icon(Icons.search, color: Colors.black,),
+              buttonWidget: const Icon(
+                Icons.search,
+                color: Colors.black,
+              ),
               searchBoxWidth: 300,
               durationInMilliSeconds: Dimensions.t700,
               isSearchBoxOnRightSide: true,
@@ -85,57 +110,74 @@ class _HomePageState extends State<HomePage> {
         ),
         body: Column(
           children: [
-            Expanded(
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: displayingListItem.length,
-                itemBuilder: (context, index) {
-                  return Column(
-                    children: [
-                      Container(
-                        height: 2,
-                        color: Colors.grey[200],
-                      ),
-                      GestureDetector(
-                        child: const CustomListTile(
-                          orderId: '123',
-                          sellerName: 'Vighnesh',
-                          buyerName: 'Chris',
-                          status: 'Done',
-                          url: 'https://goo.gl/maps/LyMxUWoRsiLXEVLr5',
-                        ),
-                        onTap: () {
-                          ProductDetails productDetails = ProductDetails(
-                            id: '1',
-                            productId: '1234',
-                            // arrival: response[i]
-                            //     ['arrival'],
-                            // ordered: response[i]
-                            //     ['Ordered'],
-                            status: 'Delivered',
-                            location: 'Location',
-                            buyeremail: 'BuyerEmail',
-                            // v: response[i]['_v'],
-                          );
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //       builder: (context) => ProductDetailsPage(
-                          //             productDetails: productDetails,
-                          //           )),
-                          // );
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const MyApp()
+            FutureBuilder(
+              future: _fetchProducts,
+              builder:
+                  ((context, AsyncSnapshot<List<ProductDetails>> snapshot) {
+                    log("message");
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                else if(snapshot.hasError){
+                  return Container();
+                  //throw Exception();
+                }
+                return Expanded(
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: snapshot.data!.length,
+                    itemBuilder: (_, index) {
+                      ProductDetails p = snapshot.data![index];
+                      // for (var items in productDetails) {
+                      //   mainListItems.add(items);
+                      // }
+                      return Column(
+                        children: [
+                          Container(
+                            height: 2,
+                            color: Colors.grey[200],
+                          ),
+                          GestureDetector(
+                            child: CustomListTile(
+                              orderId: p.id,
+                              sellerName: 'Vighnesh',
+                              buyerName: 'Chris',
+                              status: 'Done',
+                              url: 'https://goo.gl/maps/LyMxUWoRsiLXEVLr5',
                             ),
-                          );
-                        },
-                      )
-                    ],
-                  );
-                },
-              ),
+                            onTap: () {
+                              ProductDetails productDetails = ProductDetails(
+                                id: '1',
+                                productId: '1234',
+                                // arrival: response[i]
+                                //     ['arrival'],
+                                // ordered: response[i]
+                                //     ['Ordered'],
+                                status: 'Delivered',
+                                location: 'Location',
+                                buyeremail: 'BuyerEmail',
+                                // v: response[i]['_v'],
+                              );
+                              // Navigator.push(
+                              //   context,
+                              //   MaterialPageRoute(
+                              //       builder: (context) => ProductDetailsPage(
+                              //             productDetails: productDetails,
+                              //           )),
+                              // );
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const MyApp()),
+                              );
+                            },
+                          )
+                        ],
+                      );
+                    },
+                  ),
+                );
+              }),
             ),
           ],
         ),

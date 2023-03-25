@@ -1,3 +1,4 @@
+import 'package:codecrush_hackathon/extensions/hexcode_extension.dart';
 import 'package:flutter/material.dart';
 
 import '../bloc/state_bloc.dart';
@@ -22,13 +23,21 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MainApp extends StatelessWidget {
+class MainApp extends StatefulWidget {
   const MainApp({super.key});
 
   @override
+  State<MainApp> createState() => _MainAppState();
+}
+
+class _MainAppState extends State<MainApp> {
+  var heartButton = const Icon(Icons.favorite_border);
+  var redHeartButton = const Icon(Icons.favorite, color: Colors.red,);
+  bool heart = true;
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: HexColor.fromHex('#768c87'),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         leading: Container(
@@ -38,7 +47,14 @@ class MainApp extends StatelessWidget {
         actions: [
           Container(
             padding: const EdgeInsets.only(right: 25),
-            child: const Icon(Icons.favorite_border),
+            child: GestureDetector(
+              onTap: () {
+                setState(() {
+                  !heart;
+                });
+              },
+              child: heart?heartButton:redHeartButton,
+            ),
           ),
         ],
       ),
@@ -56,38 +72,7 @@ class LayoutStart extends StatelessWidget {
       children: const [
         CarDetailsAnimation(),
         _CustomBottomSheet(),
-        RentButton(),
       ],
-    );
-  }
-}
-
-class RentButton extends StatelessWidget {
-  const RentButton({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.bottomRight,
-      child: SizedBox(
-        width: 200,
-        child: TextButton(
-          onPressed: () {},
-          child: const Text(
-            "Rent Car",
-            style: TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-                letterSpacing: 1.4,
-                fontFamily: "arial"),
-          ),
-          // shape: RoundedRectangleBorder(
-          //   borderRadius: BorderRadius.only(topLeft: Radius.circular(35)),
-          // ),
-          // color: Colors.black,
-          // padding: EdgeInsets.all(25),
-        ),
-      ),
     );
   }
 }
@@ -182,11 +167,12 @@ class CarDetails extends StatelessWidget {
           text: const TextSpan(
             style: TextStyle(color: Colors.white, fontSize: 38),
             children: [
-              TextSpan(text: 'Product Id'),
-              TextSpan(text: "\n"),
               TextSpan(
                   text: 'Product Name',
                   style: TextStyle(fontWeight: FontWeight.w700)),
+              TextSpan(text: "\n"),
+              TextSpan(
+                  text: 'Product Category', style: TextStyle(fontSize: 32)),
             ],
           ),
         ),
@@ -223,7 +209,7 @@ class CarCarousel extends StatefulWidget {
 }
 
 class _CarCarouselState extends State<CarCarousel> {
-  static final List<String> imgList = ['Logo.png'];
+  static final List<String> imgList = ['fruits.jpg'];
   // final List<Widget> child = _map<Widget>(imgList, (index, String assetName) {
   //   return Container(
   //       child: Image.asset("assets/$assetName", fit: BoxFit.fitWidth));
@@ -261,7 +247,7 @@ class _CarCarouselState extends State<CarCarousel> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(15),
                       image: DecorationImage(
-                          image: AssetImage(imgList[i]), fit: BoxFit.fitWidth),
+                          image: AssetImage(imgList[i]), fit: BoxFit.fill),
                     ),
                   ),
                 ],
@@ -370,7 +356,7 @@ class SheetContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double sheetItemHeight = 110;
+    double sheetItemHeight = 185;
 
     return Container(
         padding: const EdgeInsets.only(top: 25),
@@ -389,12 +375,12 @@ class SheetContainer extends StatelessWidget {
               flex: 1,
               child: Column(
                 children: [
-                  offerDetails(sheetItemHeight),
-                  specifications(sheetItemHeight),
-                  features(sheetItemHeight),
-                  const SizedBox(
-                    height: 220,
-                  ),
+                  sellerDetails(sheetItemHeight),
+                  buyerDetails(sheetItemHeight),
+                  productStatus(sheetItemHeight),
+                  // const SizedBox(
+                  //   height: 220,
+                  // ),
                 ],
               ),
             )
@@ -412,112 +398,217 @@ class SheetContainer extends StatelessWidget {
         ));
   }
 
-  specifications(sheetItemHeight) {
+  buyerDetails(sheetItemHeight) {
     return Container(
-        padding: const EdgeInsets.only(top: 15, left: 40),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              "Buyer Details",
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 18,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-            Container(
-              margin: const EdgeInsets.only(top: 15),
-              height: sheetItemHeight,
-              child: const Text('Product Details'),
-              // child: ListView.builder(
-              //   scrollDirection: Axis.horizontal,
-              //   itemCount: 2,
-              //   itemBuilder: (_, i) {
-              //     return ListItem(
-              //       sheetItemHeight: sheetItemHeight,
-              //       mapVal: const {
-              //         'Trial1' : 'Trial1',
-              //         'Trial2' : 'Trial2',
-              //       },
-              //     );
-              //   },
-              // ),
-            )
-          ],
-        ));
+      // height: sheetItemHeight,
+      padding: const EdgeInsets.only(top: 15, left: 10),
+      child: const ExpansionTile(
+        title: Text(
+          'Buyer Details',
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 18,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+      ),
+      // child: Column(
+      //   crossAxisAlignment: CrossAxisAlignment.start,
+      //   children: [
+      //     const Text(
+      //       "Seller Details",
+      //       style: TextStyle(
+      //         color: Colors.black,
+      //         fontSize: 18,
+      //         fontWeight: FontWeight.w700,
+      //       ),
+      //     ),
+      //     Container(
+      //       width: 300,
+      //       height: sheetItemHeight,
+      //       margin: const EdgeInsets.only(top: 15),
+      //       child: ExpansionTile(
+      //         title: Text('Buyer Details'),
+      //       ),
+      //       // child: ListView.builder(
+      //       //   // scrollDirection: Axis.vertical,
+      //       //   itemCount: 2,
+      //       //   itemBuilder: (_, i) {
+      //       //     // return ListItem(
+      //       //     //   sheetItemHeight: sheetItemHeight,
+      //       //     //   mapVal: const {
+      //       //     //     'Trial1': Text('trial1'),
+      //       //     //     'Trial2': Text('trial2'),
+      //       //     //   },
+      //       //     // );
+      //       //     return Container(
+      //       //       // width: 100,
+      //       //       height: 100,
+      //       //       color: Colors.green,
+      //       //       margin: const EdgeInsets.only(bottom: 10),
+      //       //     );
+      //       //   },
+      //       // ),
+      //     )
+      //   ],
+      // ),
+    );
   }
 
-  features(double sheetItemHeight) {
+  productStatus(double sheetItemHeight) {
     return Container(
-        padding: const EdgeInsets.only(top: 15, left: 40),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              "Product status",
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 18,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-            Container(
-              margin: const EdgeInsets.only(top: 15),
-              height: sheetItemHeight,
-              child: const Text('Product Details'),
-              // child: ListView.builder(
-              //   scrollDirection: Axis.horizontal,
-              //   itemCount: 2,
-              //   itemBuilder: (_, i) {
-              //     return ListItem(
-              //       sheetItemHeight: sheetItemHeight,
-              //       mapVal: const {
-              //         'Trial1' : 'Trial1',
-              //         'Trial2' : 'Trial2',
-              //       },
-              //     );
-              //   },
-              // ),
-            )
-          ],
-        ));
+      // height: sheetItemHeight,
+      padding: const EdgeInsets.only(top: 15, left: 10),
+      child: const ExpansionTile(
+        title: Text(
+          'Product Status',
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 18,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+      ),
+      // child: Column(
+      //   crossAxisAlignment: CrossAxisAlignment.start,
+      //   children: [
+      //     const Text(
+      //       "Seller Details",
+      //       style: TextStyle(
+      //         color: Colors.black,
+      //         fontSize: 18,
+      //         fontWeight: FontWeight.w700,
+      //       ),
+      //     ),
+      //     Container(
+      //       width: 300,
+      //       height: sheetItemHeight,
+      //       margin: const EdgeInsets.only(top: 15),
+      //       // child: const Text('Product Details'),
+      //       child: ListView.builder(
+      //         // scrollDirection: Axis.vertical,
+      //         itemCount: 2,
+      //         itemBuilder: (_, i) {
+      //           // return ListItem(
+      //           //   sheetItemHeight: sheetItemHeight,
+      //           //   mapVal: const {
+      //           //     'Trial1': Text('trial1'),
+      //           //     'Trial2': Text('trial2'),
+      //           //   },
+      //           // );
+      //           return Container(
+      //             // width: 100,
+      //             height: 100,
+      //             color: Colors.green,
+      //             margin: const EdgeInsets.only(bottom: 10),
+      //           );
+      //         },
+      //       ),
+      //     )
+      //   ],
+      // )
+    );
   }
 
-  offerDetails(double sheetItemHeight) {
+  sellerDetails(double sheetItemHeight) {
     return Container(
-        padding: const EdgeInsets.only(top: 15, left: 40),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              "Seller Details",
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 18,
-                fontWeight: FontWeight.w700,
-              ),
+      // height: sheetItemHeight,
+      padding: const EdgeInsets.only(top: 15, left: 10),
+      child: ExpansionTile(
+        title: const Text(
+          'Seller Details',
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 18,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        children: [
+          Container(
+            margin: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+            decoration: BoxDecoration(border: Border.all(color: Colors.black)),
+            padding: const EdgeInsets.all(8),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 15),
+                  child: Row(
+                    children: const [
+                      Text(
+                        'Seller Name:',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text('Vighnesh'),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 15),
+                  child: Row(
+                    children: const [
+                      Text(
+                        'Seller Address:',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text('Address'),
+                    ],
+                  ),
+                ),
+              ],
             ),
-            Container(
-              margin: const EdgeInsets.only(top: 15),
-              height: sheetItemHeight,
-              child: const Text('Product Details'),
-              // child: ListView.builder(
-              //   scrollDirection: Axis.horizontal,
-              //   itemCount: 2,
-              //   itemBuilder: (_, i) {
-              //     return ListItem(
-              //       sheetItemHeight: sheetItemHeight,
-              //       mapVal: const {
-              //         'Trial1' : 'Trial1',
-              //         'Trial2' : 'Trial2',
-              //       },
-              //     );
-              //   },
-              // ),
-            )
-          ],
-        ));
+          ),
+        ],
+      ),
+      // child: Column(
+      //   crossAxisAlignment: CrossAxisAlignment.start,
+      //   children: [
+      //     const Text(
+      //       "Seller Details",
+      //       style: TextStyle(
+      //         color: Colors.black,
+      //         fontSize: 18,
+      //         fontWeight: FontWeight.w700,
+      //       ),
+      //     ),
+      //     Container(
+      //       width: 300,
+      //       height: sheetItemHeight,
+      //       margin: const EdgeInsets.only(top: 15),
+      //       // child: const Text('Product Details'),
+      //       child: ListView.builder(
+      //         // scrollDirection: Axis.vertical,
+      //         itemCount: 2,
+      //         itemBuilder: (_, i) {
+      //           // return ListItem(
+      //           //   sheetItemHeight: sheetItemHeight,
+      //           //   mapVal: const {
+      //           //     'Trial1': Text('trial1'),
+      //           //     'Trial2': Text('trial2'),
+      //           //   },
+      //           // );
+      //           return Container(
+      //             // width: 100,
+      //             height: 100,
+      //             color: Colors.green,
+      //             margin: const EdgeInsets.only(bottom: 10),
+      //           );
+      //         },
+      //       ),
+      //     )
+      //   ],
+      // ),
+    );
   }
 }
 
