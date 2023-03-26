@@ -1,68 +1,35 @@
+// import 'package:flutter/material.dart';
+// import 'package:permission_handler/permission_handler.dart';
+// import 'package:qrscan/qrscan.dart' as scanner;
 
-import 'dart:io';
+// class QrScanner extends StatefulWidget {
+//   const QrScanner({super.key});
 
-import 'package:flutter/material.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart';
+//   @override
+//   State<QrScanner> createState() => _QrScannerState();
+// }
 
-class QrScanner extends StatefulWidget {
-  const QrScanner({super.key});
+// class _QrScannerState extends State<QrScanner> {
+  // Future _qrScanner () async {
+  //   var cameraStatus = await Permission.camera.status;
+  //   if(cameraStatus.isGranted){
+  //     String? qrData = await scanner.scan();
+  //     print(qrData);
+  //   } else {
+  //     var isGrant = await Permission.camera.request();
 
-  @override
-  State<QrScanner> createState() => _QrScannerState();
-}
-
-class _QrScannerState extends State<QrScanner> {
-  Barcode? result;
-  QRViewController? controller;
-  final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
-
-  void _onQRViewCreated(QRViewController controller) {
-    setState(() => this.controller = controller);
-    controller.scannedDataStream.listen((scanData) {
-      setState(() => result = scanData);
-    });
-  }
-  // In order to get hot reload to work we need to pause the camera if the platform
-  // is android, or resume the camera if the platform is iOS.
-  @override
-  void reassemble() {
-    super.reassemble();
-    if (Platform.isAndroid) {
-      controller!.pauseCamera();
-    } else if (Platform.isIOS) {
-      controller!.resumeCamera();
-    }
-  }
-
-  void readQr() async {
-    if (result != null) {
-      controller!.pauseCamera();
-      print(result!.code);
-      controller!.dispose();
-    }
-  }
-  @override
-  Widget build(BuildContext context) {
-    readQr();
-    return Scaffold(
-      body: QRView(
-        key: qrKey,
-        onQRViewCreated: _onQRViewCreated,
-        overlay: QrScannerOverlayShape(
-          borderColor: Colors.orange,
-          borderRadius: 10,
-          borderLength: 30,
-          borderWidth: 10,
-          cutOutSize: 250,
-        ),
-      ),
-    );
-  }
-  @override
-  void dispose() {
-    controller?.dispose();
-    super.dispose();
-  }
-}
-
-  
+  //     if(isGrant.isGranted) {
+  //       String? qrData = await scanner.scan();
+  //       print(qrData);
+  //     }
+  //   }
+  // }
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       body: Container(
+//         child: _qrScanner(),
+//       ),
+//     );
+//   }
+// }

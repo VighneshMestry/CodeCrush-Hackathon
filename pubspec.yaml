@@ -42,11 +42,12 @@ dependencies:
   google_maps_flutter: ^2.2.5
   google_maps_flutter_web: ^0.4.0+7
   http: ^0.13.5
-  qr_code_scanner: ^1.0.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  qrscan: ^0.3.2
+  permission_handler: 
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

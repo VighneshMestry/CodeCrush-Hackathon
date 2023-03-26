@@ -1,8 +1,9 @@
-
-
 import 'package:codecrush_hackathon/extensions/hexcode_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+// import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:qrscan/qrscan.dart' as scanner;
 
 class CustomListTile extends StatefulWidget {
   final String orderId;
@@ -27,6 +28,21 @@ class _CustomListTileState extends State<CustomListTile> {
   Future<void> _launchUrl(String url) async {
     if (!await launchUrl(Uri.parse(url))) {
       throw Exception('Could not launch ');
+    }
+  }
+
+  Future _qrScanner () async {
+    var cameraStatus = await Permission.camera.status;
+    if(cameraStatus.isGranted){
+      String? qrData = await scanner.scan();
+      print(qrData);
+    } else {
+      var isGrant = await Permission.camera.request();
+
+      if(isGrant.isGranted) {
+        String? qrData = await scanner.scan();
+        print(qrData);
+      }
     }
   }
   @override
@@ -118,7 +134,6 @@ class _CustomListTileState extends State<CustomListTile> {
               const SizedBox(
                 height: 10,
               ),
-
               Row(
                 children: const [
                   Icon(
@@ -150,11 +165,15 @@ class _CustomListTileState extends State<CustomListTile> {
                     onPressed: () async {
                       await _launchUrl(widget.url);
                     },
-                    child: 
-                    Row(
+                    child: Row(
                       children: const [
-                        Icon(Icons.location_on, size: 20,),
-                        SizedBox(width: 5,),
+                        Icon(
+                          Icons.location_on,
+                          size: 20,
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
                         const Text("Get Location"),
                       ],
                     ),
@@ -182,6 +201,19 @@ class _CustomListTileState extends State<CustomListTile> {
                   //         ],
                   //       )),
                   // )
+                  ElevatedButton(
+                    // style: ElevatedButton.styleFrom(
+                    //   backgroundColor: HexColor.fromHex('#228b22')),
+                    onPressed: () async {
+                      await _qrScanner();
+                    },
+                    child: Row(
+                      children: const [
+                        Icon(Icons.qr_code),
+                        Text('Scan'),
+                      ],
+                    ),
+                  ),
                 ],
               )
             ],
