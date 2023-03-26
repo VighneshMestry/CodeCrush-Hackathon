@@ -50,10 +50,12 @@ class _MainAppState extends State<MainApp> {
       backgroundColor: HexColor.fromHex('#768c87'),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        leading: Container(
-          padding: const EdgeInsets.only(left: 25),
-          child: const Icon(Icons.arrow_back),
-        ),
+        // leading: Container(
+        //   padding: const EdgeInsets.only(left: 25),
+        //   child: GestureDetector(child: const Icon(Icons.arrow_back), onTap: () {
+        //     // Navigator.pop();
+        //   },),
+        // ),
         actions: [
           Container(
             padding: const EdgeInsets.only(right: 25),
@@ -173,7 +175,7 @@ class CarDetails extends StatelessWidget {
           padding: const EdgeInsets.only(left: 30),
           child: _carTitle(productDetails),
         ),
-        const CarCarousel()
+        CarCarousel(productDetails: productDetails,)
       ],
     );
   }
@@ -183,15 +185,15 @@ class CarDetails extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         RichText(
-          text: const TextSpan(
-            style: TextStyle(color: Colors.white, fontSize: 38),
+          text: TextSpan(
+            style: const TextStyle(color: Colors.white, fontSize: 38),
             children: [
               TextSpan(
-                  text: 'Product Name',
-                  style: TextStyle(fontWeight: FontWeight.w700)),
-              TextSpan(text: "\n"),
+                  text: productDetails.productName,
+                  style: const TextStyle(fontWeight: FontWeight.w700)),
+              const TextSpan(text: "\n"),
               TextSpan(
-                  text: 'Product Category', style: TextStyle(fontSize: 32)),
+                  text: productDetails.productCategory, style: const TextStyle(fontSize: 32)),
             ],
           ),
         ),
@@ -221,7 +223,8 @@ class CarDetails extends StatelessWidget {
 }
 
 class CarCarousel extends StatefulWidget {
-  const CarCarousel({super.key});
+  ProductDetails productDetails;
+  CarCarousel({super.key, required this.productDetails});
 
   @override
   State<CarCarousel> createState() => _CarCarouselState();
@@ -229,6 +232,8 @@ class CarCarousel extends StatefulWidget {
 
 class _CarCarouselState extends State<CarCarousel> {
   static final List<String> imgList = ['fruits.jpg'];
+
+  
   // final List<Widget> child = _map<Widget>(imgList, (index, String assetName) {
   //   return Container(
   //       child: Image.asset("assets/$assetName", fit: BoxFit.fitWidth));
@@ -245,13 +250,14 @@ class _CarCarouselState extends State<CarCarousel> {
 
   @override
   Widget build(BuildContext context) {
+    // widget.productDetails.productCategory == 'Fruits' ? imgList.add('fruits.jpg') : (widget.productDetails.productCategory == 'Vegetables' ? 'vegetables.jpg': 'foodGrain.jpg');
     return Column(
       children: [
         Container(
           height: 252,
           child: PageView.builder(
             controller: PageController(viewportFraction: 1.0),
-            itemCount: imgList.length,
+            itemCount: 1,
             onPageChanged: (index) {
               setState(() {
                 _current = index;

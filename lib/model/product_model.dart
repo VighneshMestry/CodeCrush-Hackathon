@@ -1,3 +1,7 @@
+// To parse this JSON data, do
+//
+//     final productDetails = productDetailsFromJson(jsonString);
+
 import 'dart:convert';
 
 ProductDetails productDetailsFromJson(String str) => ProductDetails.fromJson(json.decode(str));
@@ -18,6 +22,8 @@ class ProductDetails {
         required this.orderDate,
         required this.distance,
         required this.status,
+        required this.productName,
+        required this.productCategory,
         required this.v,
     });
 
@@ -33,6 +39,8 @@ class ProductDetails {
     String orderDate;
     String distance;
     String status;
+    String productName;
+    String productCategory;
     int v;
 
     factory ProductDetails.fromJson(Map<String, dynamic> json) => ProductDetails(
@@ -43,11 +51,13 @@ class ProductDetails {
         ownerPhone: json["ownerPhone"] ?? "",
         ownerLocation: json["ownerLocation"] ?? "",
         buyerName: json["buyerName"] ?? "",
-        buyerPhone: json["buyerPhone"]?? "",
+        buyerPhone: json["buyerPhone"] ?? "",
         buyerLocation: json["buyerLocation"] ?? "",
         orderDate: json["orderDate"] ?? "",
         distance: json["distance"] ?? "",
         status: json["status"] ?? "",
+        productName: json["productName"] ?? "",
+        productCategory: json["productCategory"] ?? "",
         v: json["__v"] ?? "",
     );
 
@@ -64,6 +74,8 @@ class ProductDetails {
         "orderDate": orderDate,
         "distance": distance,
         "status": status,
+        "productName": productName,
+        "productCategory": productCategory,
         "__v": v,
     };
 }

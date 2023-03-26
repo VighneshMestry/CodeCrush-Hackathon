@@ -147,12 +147,12 @@ class _HomePageState extends State<HomePage> {
                   ((context, AsyncSnapshot<List<ProductDetails>> snapshot) {
                 log("message");
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  log('______________________________________' + snapshot.data.toString());
+                  log('______________________________________' +
+                      snapshot.data.toString());
                   fetchList(snapshot.data);
 
                   return const Center(child: CircularProgressIndicator());
                 } else if (snapshot.hasError) {
-
                   return Container();
                 }
                 return Expanded(
@@ -177,11 +177,14 @@ class _HomePageState extends State<HomePage> {
                                   color: Colors.grey[200],
                                 ),
                                 GestureDetector(
-                                  child: CustomListTile(productDetails: p,
+                                  child: CustomListTile(
+                                    productDetails: p,
                                   ),
                                   onTap: () {
                                     ProductDetails productDetails =
                                         ProductDetails(
+                                      productName: p.productName,
+                                      productCategory: p.productCategory,
                                       id: p.id,
                                       productId: p.productId,
                                       ownerId: p.ownerId,
