@@ -1,30 +1,37 @@
+import 'package:codecrush_hackathon/constants/custom_icons.dart';
 import 'package:codecrush_hackathon/extensions/hexcode_extension.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../bloc/state_bloc.dart';
 import '../bloc/state_provider.dart';
+import '../model/product_model.dart';
 
-void main() {
-  runApp(const MyApp());
-}
+// void main() {
+//   runApp(MyApp());
+// }
 
 // final currentCar = carList.cars[0];
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  ProductDetails productDetails;
+  MyApp({super.key, required this.productDetails});
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: MainApp(),
+      home: MainApp(
+        productDetails: productDetails,
+      ),
     );
   }
 }
 
 class MainApp extends StatefulWidget {
-  const MainApp({super.key});
+  ProductDetails productDetails;
+  MainApp({super.key, required this.productDetails});
 
   @override
   State<MainApp> createState() => _MainAppState();
@@ -32,7 +39,10 @@ class MainApp extends StatefulWidget {
 
 class _MainAppState extends State<MainApp> {
   var heartButton = const Icon(Icons.favorite_border);
-  var redHeartButton = const Icon(Icons.favorite, color: Colors.red,);
+  var redHeartButton = const Icon(
+    Icons.favorite,
+    color: Colors.red,
+  );
   bool heart = true;
   @override
   Widget build(BuildContext context) {
@@ -53,32 +63,38 @@ class _MainAppState extends State<MainApp> {
                   !heart;
                 });
               },
-              child: heart?heartButton:redHeartButton,
+              child: heart ? heartButton : redHeartButton,
             ),
           ),
         ],
       ),
-      body: const LayoutStart(),
+      body: LayoutStart(
+        productDetails: widget.productDetails,
+      ),
     );
   }
 }
 
 class LayoutStart extends StatelessWidget {
-  const LayoutStart({super.key});
+  ProductDetails productDetails;
+  LayoutStart({super.key, required this.productDetails});
 
   @override
   Widget build(BuildContext context) {
     return Stack(
-      children: const [
-        CarDetailsAnimation(),
-        _CustomBottomSheet(),
+      children: [
+        CarDetailsAnimation(
+          productDetails: productDetails,
+        ),
+        _CustomBottomSheet(productDetails: productDetails),
       ],
     );
   }
 }
 
 class CarDetailsAnimation extends StatefulWidget {
-  const CarDetailsAnimation({super.key});
+  ProductDetails productDetails;
+  CarDetailsAnimation({super.key, required this.productDetails});
 
   @override
   State<CarDetailsAnimation> createState() => _CarDetailsAnimationState();
@@ -135,7 +151,9 @@ class _CarDetailsAnimationState extends State<CarDetailsAnimation>
             scale: scaleAnimation,
             child: FadeTransition(
               opacity: fadeAnimation,
-              child: const CarDetails(),
+              child: CarDetails(
+                productDetails: widget.productDetails,
+              ),
             ),
           );
         });
@@ -143,7 +161,8 @@ class _CarDetailsAnimationState extends State<CarDetailsAnimation>
 }
 
 class CarDetails extends StatelessWidget {
-  const CarDetails({super.key});
+  ProductDetails productDetails;
+  CarDetails({super.key, required this.productDetails});
 
   @override
   Widget build(BuildContext context) {
@@ -152,14 +171,14 @@ class CarDetails extends StatelessWidget {
       children: [
         Container(
           padding: const EdgeInsets.only(left: 30),
-          child: _carTitle(),
+          child: _carTitle(productDetails),
         ),
         const CarCarousel()
       ],
     );
   }
 
-  _carTitle() {
+  _carTitle(ProductDetails productDetails) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -283,7 +302,8 @@ class _CarCarouselState extends State<CarCarousel> {
 }
 
 class _CustomBottomSheet extends StatefulWidget {
-  const _CustomBottomSheet({super.key});
+  ProductDetails productDetails;
+  _CustomBottomSheet({super.key, required this.productDetails});
 
   @override
   State<_CustomBottomSheet> createState() => __CustomBottomSheetState();
@@ -345,14 +365,17 @@ class __CustomBottomSheetState extends State<_CustomBottomSheet>
             return;
           }
         },
-        child: const SheetContainer(),
+        child: SheetContainer(
+          productDetails: widget.productDetails,
+        ),
       ),
     );
   }
 }
 
 class SheetContainer extends StatelessWidget {
-  const SheetContainer({super.key});
+  ProductDetails productDetails;
+  SheetContainer({super.key, required this.productDetails});
 
   @override
   Widget build(BuildContext context) {
@@ -375,9 +398,9 @@ class SheetContainer extends StatelessWidget {
               flex: 1,
               child: Column(
                 children: [
-                  sellerDetails(sheetItemHeight),
-                  buyerDetails(sheetItemHeight),
-                  productStatus(sheetItemHeight),
+                  sellerDetails(sheetItemHeight, productDetails),
+                  buyerDetails(sheetItemHeight, productDetails),
+                  productStatus(sheetItemHeight, productDetails),
                   // const SizedBox(
                   //   height: 220,
                   // ),
@@ -398,12 +421,25 @@ class SheetContainer extends StatelessWidget {
         ));
   }
 
-  buyerDetails(sheetItemHeight) {
+  String stringToDecimal(String value) {
+    int decimalIndex = value.indexOf('.'); // 2
+    String digitsUpToDecimal = value.substring(0, decimalIndex);
+    return digitsUpToDecimal;
+  }
+
+  int stringToInteger(String value) {
+    int decimalIndex = value.indexOf('.'); // 2
+    String digitsUpToDecimal = value.substring(0, decimalIndex);
+    int result = int.parse(digitsUpToDecimal);
+    return result;
+  }
+
+  buyerDetails(sheetItemHeight, ProductDetails productDetails) {
     return Container(
       // height: sheetItemHeight,
       padding: const EdgeInsets.only(top: 15, left: 10),
-      child: const ExpansionTile(
-        title: Text(
+      child: ExpansionTile(
+        title: const Text(
           'Buyer Details',
           style: TextStyle(
             color: Colors.black,
@@ -411,106 +447,219 @@ class SheetContainer extends StatelessWidget {
             fontWeight: FontWeight.w700,
           ),
         ),
+        children: [
+          Container(
+            margin: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+            decoration: BoxDecoration(border: Border.all(color: Colors.black)),
+            padding: const EdgeInsets.all(8),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                const SizedBox(
+                  height: 20,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 15),
+                  child: RichText(
+                        text: TextSpan(
+                          children: [
+                            const TextSpan(
+                              text: 'Buyer Name: ',
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.black),
+                            ),
+                            TextSpan(
+                              text: productDetails.buyerName,
+                              style: const TextStyle(color: Colors.black, fontSize: 17),
+                            ),
+                          ],
+                        ),
+                      )  
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 15),
+                  child: RichText(
+                        text: TextSpan(
+                          children: [
+                            const TextSpan(
+                              text: 'Buyer Contact: ',
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.black),
+                            ),
+                            TextSpan(
+                              text: productDetails.buyerPhone,
+                              style: const TextStyle(color: Colors.black, fontSize: 17),
+                            ),
+                          ],
+                        ),
+                      )  
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 15),
+                  child: Row(
+                    children: [
+                      const Text(
+                        'Buyer Address:',
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.all(4),
+                          backgroundColor: HexColor.fromHex('#228b22'),
+                          minimumSize: const Size(120, 20),
+                        ),
+                        onPressed: () async {
+                          await _launchUrl(productDetails.buyerLocation);
+                        },
+                        child: Row(
+                          children: const [
+                            Icon(
+                              Icons.location_on,
+                              size: 20,
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Text("Drop Location"),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
-      // child: Column(
-      //   crossAxisAlignment: CrossAxisAlignment.start,
-      //   children: [
-      //     const Text(
-      //       "Seller Details",
-      //       style: TextStyle(
-      //         color: Colors.black,
-      //         fontSize: 18,
-      //         fontWeight: FontWeight.w700,
-      //       ),
-      //     ),
-      //     Container(
-      //       width: 300,
-      //       height: sheetItemHeight,
-      //       margin: const EdgeInsets.only(top: 15),
-      //       child: ExpansionTile(
-      //         title: Text('Buyer Details'),
-      //       ),
-      //       // child: ListView.builder(
-      //       //   // scrollDirection: Axis.vertical,
-      //       //   itemCount: 2,
-      //       //   itemBuilder: (_, i) {
-      //       //     // return ListItem(
-      //       //     //   sheetItemHeight: sheetItemHeight,
-      //       //     //   mapVal: const {
-      //       //     //     'Trial1': Text('trial1'),
-      //       //     //     'Trial2': Text('trial2'),
-      //       //     //   },
-      //       //     // );
-      //       //     return Container(
-      //       //       // width: 100,
-      //       //       height: 100,
-      //       //       color: Colors.green,
-      //       //       margin: const EdgeInsets.only(bottom: 10),
-      //       //     );
-      //       //   },
-      //       // ),
-      //     )
-      //   ],
-      // ),
     );
   }
 
-  productStatus(double sheetItemHeight) {
+  productStatus(double sheetItemHeight, ProductDetails productDetails) {
     return Container(
       // height: sheetItemHeight,
       padding: const EdgeInsets.only(top: 15, left: 10),
-      child: const ExpansionTile(
-        title: Text(
-          'Product Status',
+      child: ExpansionTile(
+        title: const Text(
+          'Transaction Details',
           style: TextStyle(
             color: Colors.black,
             fontSize: 18,
             fontWeight: FontWeight.w700,
           ),
         ),
+        children: [
+          Container(
+            margin: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+            decoration: BoxDecoration(border: Border.all(color: Colors.black)),
+            padding: const EdgeInsets.all(8),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                const SizedBox(
+                  height: 20,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 15),
+                  child: RichText(
+                        text: TextSpan(
+                          children: [
+                            const TextSpan(
+                              text: 'Order Date: ',
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.black),
+                            ),
+                            TextSpan(
+                              text: productDetails.orderDate,
+                              style: const TextStyle(color: Colors.black, fontSize: 17),
+                            ),
+                          ],
+                        ),
+                      )
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 15),
+                  child: Row(
+                    children: [
+                      const Text(
+                        'Distance:',
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Text(stringToDecimal(productDetails.distance), style: TextStyle(fontSize: 17),),
+                      const SizedBox(
+                        width: 3,
+                      ),
+                      const Text('km', style: TextStyle(fontSize: 17),),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      stringToInteger(productDetails.distance) <= 100
+                          ? CustomIcons().EvVehicle
+                          : CustomIcons().gasVehicles,
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 15),
+                  child: Row(
+                    children: [
+                      const Text(
+                        'Delivery Status:',
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      productDetails.status == 'Delivered'
+                          ? CustomIcons().Delivered
+                          : (productDetails.status == 'Ordered'
+                              ? CustomIcons().Ordered
+                              : CustomIcons().OutForDelivery),
+                      Text(productDetails.status, style: TextStyle(fontSize: 17),),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
-      // child: Column(
-      //   crossAxisAlignment: CrossAxisAlignment.start,
-      //   children: [
-      //     const Text(
-      //       "Seller Details",
-      //       style: TextStyle(
-      //         color: Colors.black,
-      //         fontSize: 18,
-      //         fontWeight: FontWeight.w700,
-      //       ),
-      //     ),
-      //     Container(
-      //       width: 300,
-      //       height: sheetItemHeight,
-      //       margin: const EdgeInsets.only(top: 15),
-      //       // child: const Text('Product Details'),
-      //       child: ListView.builder(
-      //         // scrollDirection: Axis.vertical,
-      //         itemCount: 2,
-      //         itemBuilder: (_, i) {
-      //           // return ListItem(
-      //           //   sheetItemHeight: sheetItemHeight,
-      //           //   mapVal: const {
-      //           //     'Trial1': Text('trial1'),
-      //           //     'Trial2': Text('trial2'),
-      //           //   },
-      //           // );
-      //           return Container(
-      //             // width: 100,
-      //             height: 100,
-      //             color: Colors.green,
-      //             margin: const EdgeInsets.only(bottom: 10),
-      //           );
-      //         },
-      //       ),
-      //     )
-      //   ],
-      // )
     );
   }
 
-  sellerDetails(double sheetItemHeight) {
+  Future<void> _launchUrl(String url) async {
+    if (!await launchUrl(Uri.parse(url))) {
+      throw Exception('Could not launch ');
+    }
+  }
+
+  sellerDetails(double sheetItemHeight, ProductDetails productDetails) {
     return Container(
       // height: sheetItemHeight,
       padding: const EdgeInsets.only(top: 15, left: 10),
@@ -532,20 +681,63 @@ class SheetContainer extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
+                const SizedBox(
+                  height: 20,
+                ),
                 Padding(
                   padding: const EdgeInsets.only(left: 15),
                   child: Row(
-                    children: const [
-                      Text(
-                        'Seller Name:',
-                        style: TextStyle(fontSize: 16),
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text('Vighnesh'),
+                    children: [
+                      // const Text(
+                      //   'Seller Name:',
+                      //   style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                      // ),
+                      // const SizedBox(
+                      //   width: 10,
+                      // ),
+                      // Text(productDetails.ownerName),
+                      RichText(
+                        text: TextSpan(
+                          children: [
+                            const TextSpan(
+                              text: 'Seller Name: ',
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.black),
+                            ),
+                            TextSpan(
+                              text: productDetails.ownerName,
+                              style: const TextStyle(color: Colors.black, fontSize: 17),
+                            ),
+                          ],
+                        ),
+                      )             
                     ],
                   ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 15),
+                  child: RichText(
+                        text: TextSpan(
+                          children: [
+                            const TextSpan(
+                              text: 'Seller Contact: ',
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.black),
+                            ),
+                            TextSpan(
+                              text: productDetails.ownerPhone,
+                              style: const TextStyle(color: Colors.black, fontSize: 17),
+                            ),
+                          ],
+                        ),
+                      )
                 ),
                 const SizedBox(
                   height: 10,
@@ -553,15 +745,36 @@ class SheetContainer extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(left: 15),
                   child: Row(
-                    children: const [
-                      Text(
+                    children: [
+                      const Text(
                         'Seller Address:',
-                        style: TextStyle(fontSize: 16),
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 10,
                       ),
-                      Text('Address'),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.all(4),
+                          backgroundColor: HexColor.fromHex('#228b22'),
+                          minimumSize: const Size(120, 20),
+                        ),
+                        onPressed: () async {
+                          await _launchUrl(productDetails.ownerLocation);
+                        },
+                        child: Row(
+                          children: const [
+                            Icon(
+                              Icons.location_on,
+                              size: 20,
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Text("Pickup Location"),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -570,44 +783,6 @@ class SheetContainer extends StatelessWidget {
           ),
         ],
       ),
-      // child: Column(
-      //   crossAxisAlignment: CrossAxisAlignment.start,
-      //   children: [
-      //     const Text(
-      //       "Seller Details",
-      //       style: TextStyle(
-      //         color: Colors.black,
-      //         fontSize: 18,
-      //         fontWeight: FontWeight.w700,
-      //       ),
-      //     ),
-      //     Container(
-      //       width: 300,
-      //       height: sheetItemHeight,
-      //       margin: const EdgeInsets.only(top: 15),
-      //       // child: const Text('Product Details'),
-      //       child: ListView.builder(
-      //         // scrollDirection: Axis.vertical,
-      //         itemCount: 2,
-      //         itemBuilder: (_, i) {
-      //           // return ListItem(
-      //           //   sheetItemHeight: sheetItemHeight,
-      //           //   mapVal: const {
-      //           //     'Trial1': Text('trial1'),
-      //           //     'Trial2': Text('trial2'),
-      //           //   },
-      //           // );
-      //           return Container(
-      //             // width: 100,
-      //             height: 100,
-      //             color: Colors.green,
-      //             margin: const EdgeInsets.only(bottom: 10),
-      //           );
-      //         },
-      //       ),
-      //     )
-      //   ],
-      // ),
     );
   }
 }

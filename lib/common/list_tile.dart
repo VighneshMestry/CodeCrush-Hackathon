@@ -1,25 +1,18 @@
 import 'dart:developer';
+import 'dart:ffi';
 
+import 'package:codecrush_hackathon/constants/custom_icons.dart';
 import 'package:codecrush_hackathon/extensions/hexcode_extension.dart';
+import 'package:codecrush_hackathon/model/product_model.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:qrscan/qrscan.dart' as scanner;
 
 class CustomListTile extends StatefulWidget {
-  final String orderId;
-  final String sellerName;
-  final String buyerName;
-  final String status;
-  final String url;
+  ProductDetails productDetails;
 
-  const CustomListTile(
-      {super.key,
-      required this.orderId,
-      required this.sellerName,
-      required this.buyerName,
-      required this.status,
-      required this.url});
+  CustomListTile({super.key, required this.productDetails});
 
   @override
   State<CustomListTile> createState() => _CustomListTileState();
@@ -32,22 +25,24 @@ class _CustomListTileState extends State<CustomListTile> {
     }
   }
 
-  Future _qrScanner () async {
+  Future _qrScanner() async {
     var cameraStatus = await Permission.camera.status;
-    if(cameraStatus.isGranted){
+    if (cameraStatus.isGranted) {
       String? qrData = await scanner.scan();
       log(qrData!);
       await _launchUrl(qrData);
     } else {
       var isGrant = await Permission.camera.request();
 
-      if(isGrant.isGranted) {
+      if (isGrant.isGranted) {
         String? qrData = await scanner.scan();
         log(qrData!);
         await _launchUrl(qrData);
       }
     }
   }
+
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -87,7 +82,7 @@ class _CustomListTileState extends State<CustomListTile> {
                           color: Colors.black,
                         )),
                     TextSpan(
-                        text: widget.orderId,
+                        text: widget.productDetails.productId,
                         style: const TextStyle(
                           fontSize: 16,
                           color: Colors.black87,
@@ -108,7 +103,7 @@ class _CustomListTileState extends State<CustomListTile> {
                       color: Colors.black,
                     )),
                 TextSpan(
-                    text: widget.sellerName,
+                    text: widget.productDetails.ownerName,
                     style: const TextStyle(
                       fontSize: 16,
                       color: Colors.black87,
@@ -127,7 +122,7 @@ class _CustomListTileState extends State<CustomListTile> {
                       color: Colors.black,
                     )),
                 TextSpan(
-                    text: widget.buyerName,
+                    text: widget.productDetails.buyerName,
                     style: const TextStyle(
                       fontSize: 16,
                       color: Colors.black87,
@@ -137,18 +132,20 @@ class _CustomListTileState extends State<CustomListTile> {
                 height: 10,
               ),
               Row(
-                children: const [
-                  Icon(
-                    Icons.done_rounded,
-                    color: Colors.green,
-                    size: 26,
-                  ),
-                  SizedBox(
-                    width: 5,
-                  ),
+                children: [
+                  // const Icon(
+                  //   Icons.done_rounded,
+                  //   color: Colors.green,
+                  //   size: 26,
+                  // ),
+                  // const SizedBox(
+                  //   width: 5,
+                  // ),
+                  widget.productDetails.status == 'Delivered' ? CustomIcons().Delivered : (widget.productDetails.status == 'Ordered' ? CustomIcons().Ordered : CustomIcons().OutForDelivery),
+                  const SizedBox(width: 5,), 
                   Text(
-                    "Ordered",
-                    style: TextStyle(
+                    widget.productDetails.status,
+                    style: const TextStyle(
                         fontSize: 16,
                         fontFamily: "Avenir",
                         fontWeight: FontWeight.bold),
@@ -158,14 +155,37 @@ class _CustomListTileState extends State<CustomListTile> {
               const SizedBox(
                 height: 10,
               ),
-              Row(
+              Column(
                 children: [
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: HexColor.fromHex('#228b22'),
                     ),
                     onPressed: () async {
-                      await _launchUrl(widget.url);
+                      await _launchUrl(widget.productDetails.ownerLocation);
+                    },
+                    child: Row(
+                      children: const [
+                        Icon(
+                          Icons.location_on,
+                          size: 20,
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text("Pickup Location"),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: HexColor.fromHex('#228b22'),
+                    ),
+                    onPressed: () async {
+                      await _launchUrl(widget.productDetails.buyerLocation);
                     },
                     child: Row(
                       children: const [
@@ -176,25 +196,55 @@ class _CustomListTileState extends State<CustomListTile> {
                         SizedBox(
                           width: 5,
                         ),
-                        Text("Get Location"),
+                        Text("Delivery Location"),
                       ],
                     ),
                   ),
                   const SizedBox(
-                    width: 5,
+                    height: 5,
                   ),
-                  ElevatedButton(
-                    // style: ElevatedButton.styleFrom(
-                    //   backgroundColor: HexColor.fromHex('#228b22')),
-                    onPressed: () async {
-                      await _qrScanner();
-                    },
-                    child: Row(
-                      children: const [
-                        Icon(Icons.qr_code),
-                        Text('Scan'),
-                      ],
-                    ),
+                  Row(
+                    children: [
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: HexColor.fromHex('#475865')),
+                        onPressed: () async {
+                          await _qrScanner();
+                        },
+                        child: Row(
+                          children: const [
+                            Icon(
+                              Icons.qr_code,
+                            ),
+                            Text('Scan'),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: HexColor.fromHex('#475865'),
+                        ),
+                        onPressed: () async {
+                          await _qrScanner();
+                        },
+                        child: Row(
+                          children:  [
+                            const Icon(
+                              Icons.local_shipping_outlined,
+                            ),
+                            const SizedBox(
+                              width: 5,
+                            ),
+                            Text(widget.productDetails.distance.substring(0, 2)),
+                            const SizedBox(width: 2,),
+                            const Text('km'),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               )

@@ -23,15 +23,12 @@ class _HomePageState extends State<HomePage> {
 
   AuthService authService = AuthService();
 
-  
-
   Future<List<ProductDetails>> getTrackers() async {
     List<ProductDetails> products = [];
     try {
       var response = await authService.getTrackers() as List;
       products = response.map((e) => ProductDetails.fromJson(e)).toList();
       log(products.toString());
-
     } catch (e) {
       log(e.toString());
       throw Exception();
@@ -61,7 +58,8 @@ class _HomePageState extends State<HomePage> {
   var searchString = '';
 
   Future<List<ProductDetails>> tempFunction() {
-    Future<List<ProductDetails>> _fetchProducts;_fetchProducts = getTrackers();
+    Future<List<ProductDetails>> _fetchProducts;
+    _fetchProducts = getTrackers();
     return _fetchProducts;
   }
 
@@ -77,9 +75,8 @@ class _HomePageState extends State<HomePage> {
   void filterSearchResults(String query) {
     List<String> dummySearchList = [];
     // dummySearchList.addAll(mainListItems);
-    for(int i = 0; i < mainListItems.length; i++){
+    for (int i = 0; i < mainListItems.length; i++) {
       dummySearchList.add(mainListItems[i]);
-
     }
     if (query.isNotEmpty) {
       // List<String> dummyListData = List<String>();
@@ -103,8 +100,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void fetchList(List<ProductDetails>? list) {
-    
-    for(int i = 0; i< list!.length; i++){
+    for (int i = 0; i < list!.length; i++) {
       mainListItems.add(list[i].id);
     }
   }
@@ -139,7 +135,6 @@ class _HomePageState extends State<HomePage> {
                   searchString = value;
                 });
                 filterSearchResults(value);
-                
               },
             )
           ],
@@ -150,22 +145,16 @@ class _HomePageState extends State<HomePage> {
               future: tempFunction(),
               builder:
                   ((context, AsyncSnapshot<List<ProductDetails>> snapshot) {
-                    log("message");
+                log("message");
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  log('______________________________________'+snapshot.data.toString());
+                  log('______________________________________' + snapshot.data.toString());
                   fetchList(snapshot.data);
 
                   return const Center(child: CircularProgressIndicator());
-                }
-                else if(snapshot.hasError){
+                } else if (snapshot.hasError) {
+
                   return Container();
-                  //throw Exception();
                 }
-                // List temp = _fetchProducts.toList();
-                // mainListItems = _fetchProducts.toString();
-                // for(var item in temp){
-                //   mainListItems.add(item);
-                // }
                 return Expanded(
                   child: ListView.builder(
                     shrinkWrap: true,
@@ -175,54 +164,58 @@ class _HomePageState extends State<HomePage> {
                       // fetchList();
                       // List<ProductDetails> list =  _fetchProducts;
                       log(index.toString());
-                      ProductDetails p = snapshot.data![index]; 
+                      ProductDetails p = snapshot.data![index];
                       // for (var i = 0; i < list.length; i++) {
                       //   ProductDetails p1 = list[i];
                       //   mainListItems.add(p1.id);
                       // }
-                      return mainListItems[index].contains(searchString) ? Column(
-                        children: [
-                          Container(
-                            height: 2,
-                            color: Colors.grey[200],
-                          ),
-                          GestureDetector(
-                            child: CustomListTile(
-                              orderId: mainListItems[index],
-                              sellerName: 'Vighnesh',
-                              buyerName: 'Chris',
-                              status: 'Done',
-                              url: 'https://goo.gl/maps/LyMxUWoRsiLXEVLr5',
-                            ),
-                            onTap: () {
-                              ProductDetails productDetails = ProductDetails(
-                                id: '1',
-                                productId: '1234',
-                                // arrival: response[i]
-                                //     ['arrival'],
-                                // ordered: response[i]
-                                //     ['Ordered'],
-                                status: 'Delivered',
-                                location: 'Location',
-                                buyeremail: 'BuyerEmail',
-                                // v: response[i]['_v'],
-                              );
-                              // Navigator.push(
-                              //   context,
-                              //   MaterialPageRoute(
-                              //       builder: (context) => ProductDetailsPage(
-                              //             productDetails: productDetails,
-                              //           )),
-                              // );
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const MyApp()),
-                              );
-                            },
-                          )
-                        ],
-                      ) : Container();
+                      return mainListItems[index].contains(searchString)
+                          ? Column(
+                              children: [
+                                Container(
+                                  height: 2,
+                                  color: Colors.grey[200],
+                                ),
+                                GestureDetector(
+                                  child: CustomListTile(productDetails: p,
+                                  ),
+                                  onTap: () {
+                                    ProductDetails productDetails =
+                                        ProductDetails(
+                                      id: p.id,
+                                      productId: p.productId,
+                                      ownerId: p.ownerId,
+                                      status: p.status,
+                                      ownerLocation: p.ownerLocation,
+                                      buyerName: p.buyerName,
+                                      buyerLocation: p.buyerLocation,
+                                      buyerPhone: p.buyerPhone,
+                                      distance: p.distance,
+                                      orderDate: p.orderDate,
+                                      ownerName: p.ownerName,
+                                      ownerPhone: p.ownerPhone,
+                                      v: 0,
+                                    );
+                                    // Navigator.push(
+                                    //   context,
+                                    //   MaterialPageRoute(
+                                    //       builder: (context) => ProductDetailsPage(
+                                    //             productDetails: productDetails,
+                                    //           )),
+                                    // );
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => MyApp(
+                                          productDetails: p,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                )
+                              ],
+                            )
+                          : Container();
                     },
                   ),
                 );
