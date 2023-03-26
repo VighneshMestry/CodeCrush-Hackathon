@@ -1,7 +1,8 @@
+import 'dart:developer';
+
 import 'package:codecrush_hackathon/extensions/hexcode_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-// import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:qrscan/qrscan.dart' as scanner;
 
@@ -35,13 +36,15 @@ class _CustomListTileState extends State<CustomListTile> {
     var cameraStatus = await Permission.camera.status;
     if(cameraStatus.isGranted){
       String? qrData = await scanner.scan();
-      print(qrData);
+      log(qrData!);
+      await _launchUrl(qrData);
     } else {
       var isGrant = await Permission.camera.request();
 
       if(isGrant.isGranted) {
         String? qrData = await scanner.scan();
-        print(qrData);
+        log(qrData!);
+        await _launchUrl(qrData);
       }
     }
   }
@@ -58,7 +61,6 @@ class _CustomListTileState extends State<CustomListTile> {
             height: 100,
             decoration: const BoxDecoration(
               shape: BoxShape.circle,
-              // borderRadius: BorderRadius.circular(10),
               image: DecorationImage(
                 image: NetworkImage(
                     "https://static.vecteezy.com/system/resources/previews/016/973/351/original/shopping-cart-icon-in-flat-style-trolley-illustration-on-black-round-background-with-long-shadow-effect-basket-circle-button-business-concept-vector.jpg"),
@@ -174,33 +176,13 @@ class _CustomListTileState extends State<CustomListTile> {
                         SizedBox(
                           width: 5,
                         ),
-                        const Text("Get Location"),
+                        Text("Get Location"),
                       ],
                     ),
                   ),
                   const SizedBox(
                     width: 5,
                   ),
-                  // SizedBox(
-                  //   width: 100,
-                  //   child: ElevatedButton(
-                  //       style: ElevatedButton.styleFrom(
-                  //         backgroundColor: Colors.blue,
-                  //       ),
-                  //       onPressed: () {
-                  //         // Navigator.push(
-                  //         //   context,
-                  //         // MaterialPageRoute(builder: (context) => ProductDetailsPage(productDetails: productDetails,)),
-                  //         // );
-                  //         // Navigator.push(context, MaterialPageRoute(builder: (context) => const DemoPage()));
-                  //       },
-                  //       child: Row(
-                  //         children: const [
-                  //           Text('Details'),
-                  //           Icon(Icons.arrow_drop_down),
-                  //         ],
-                  //       )),
-                  // )
                   ElevatedButton(
                     // style: ElevatedButton.styleFrom(
                     //   backgroundColor: HexColor.fromHex('#228b22')),

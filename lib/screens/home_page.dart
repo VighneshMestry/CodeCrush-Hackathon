@@ -23,13 +23,12 @@ class _HomePageState extends State<HomePage> {
 
   AuthService authService = AuthService();
 
-  var _fetchProducts;
+  
 
   Future<List<ProductDetails>> getTrackers() async {
     List<ProductDetails> products = [];
     try {
       var response = await authService.getTrackers() as List;
-
       products = response.map((e) => ProductDetails.fromJson(e)).toList();
       log(products.toString());
 
@@ -41,21 +40,47 @@ class _HomePageState extends State<HomePage> {
     return products;
   }
 
-  final mainListItems = ['1', '2', '3', '4', '5'];
+  // void getTrackers() async {
+  //   List<ProductDetails> products = [];
+  //   try {
+  //     List<ProductDetails> response = await authService.getTrackers() as List<ProductDetails>;
+  //     _fetchProducts = response;
+  //     // products = response.map((e) => ProductDetails.fromJson(e)).toList();
+  //     log(products.toString());
+
+  //   } catch (e) {
+  //     log(e.toString());
+  //     throw Exception();
+  //   }
+  // }
+
+  // final mainListItems = ['1', '2', '3', '4', '5'];
+  var mainListItems = [];
 
   var displayingListItem = [];
+  var searchString = '';
+
+  Future<List<ProductDetails>> tempFunction() {
+    Future<List<ProductDetails>> _fetchProducts;_fetchProducts = getTrackers();
+    return _fetchProducts;
+  }
 
   @override
   void initState() {
     displayingListItem.addAll(mainListItems);
-    _fetchProducts = getTrackers();
-    log(_fetchProducts.toString());
+    getTrackers();
+    // tempFunction();
+    // log(_fetchProducts.toString());
     super.initState();
   }
 
   void filterSearchResults(String query) {
     List<String> dummySearchList = [];
-    dummySearchList.addAll(mainListItems);
+    // dummySearchList.addAll(mainListItems);
+    for(int i = 0; i < mainListItems.length; i++){
+      dummySearchList.add(mainListItems[i]);
+
+    }
     if (query.isNotEmpty) {
       // List<String> dummyListData = List<String>();
       List<String> dummyListData = [];
@@ -74,6 +99,13 @@ class _HomePageState extends State<HomePage> {
         displayingListItem.clear();
         displayingListItem.addAll(mainListItems);
       });
+    }
+  }
+
+  void fetchList(List<ProductDetails>? list) {
+    
+    for(int i = 0; i< list!.length; i++){
+      mainListItems.add(list[i].id);
     }
   }
 
@@ -103,7 +135,11 @@ class _HomePageState extends State<HomePage> {
               durationInMilliSeconds: Dimensions.t700,
               isSearchBoxOnRightSide: true,
               onChanged: (value) {
+                setState(() {
+                  searchString = value;
+                });
                 filterSearchResults(value);
+                
               },
             )
           ],
@@ -111,27 +147,40 @@ class _HomePageState extends State<HomePage> {
         body: Column(
           children: [
             FutureBuilder(
-              future: _fetchProducts,
+              future: tempFunction(),
               builder:
                   ((context, AsyncSnapshot<List<ProductDetails>> snapshot) {
                     log("message");
                 if (snapshot.connectionState == ConnectionState.waiting) {
+                  log('______________________________________'+snapshot.data.toString());
+                  fetchList(snapshot.data);
+
                   return const Center(child: CircularProgressIndicator());
                 }
                 else if(snapshot.hasError){
                   return Container();
                   //throw Exception();
                 }
+                // List temp = _fetchProducts.toList();
+                // mainListItems = _fetchProducts.toString();
+                // for(var item in temp){
+                //   mainListItems.add(item);
+                // }
                 return Expanded(
                   child: ListView.builder(
                     shrinkWrap: true,
+                    // itemCount: snapshot.data!.length,
                     itemCount: snapshot.data!.length,
                     itemBuilder: (_, index) {
-                      ProductDetails p = snapshot.data![index];
-                      // for (var items in productDetails) {
-                      //   mainListItems.add(items);
+                      // fetchList();
+                      // List<ProductDetails> list =  _fetchProducts;
+                      log(index.toString());
+                      ProductDetails p = snapshot.data![index]; 
+                      // for (var i = 0; i < list.length; i++) {
+                      //   ProductDetails p1 = list[i];
+                      //   mainListItems.add(p1.id);
                       // }
-                      return Column(
+                      return mainListItems[index].contains(searchString) ? Column(
                         children: [
                           Container(
                             height: 2,
@@ -139,7 +188,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                           GestureDetector(
                             child: CustomListTile(
-                              orderId: p.id,
+                              orderId: mainListItems[index],
                               sellerName: 'Vighnesh',
                               buyerName: 'Chris',
                               status: 'Done',
@@ -173,7 +222,7 @@ class _HomePageState extends State<HomePage> {
                             },
                           )
                         ],
-                      );
+                      ) : Container();
                     },
                   ),
                 );
