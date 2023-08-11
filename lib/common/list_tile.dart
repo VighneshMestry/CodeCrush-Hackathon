@@ -1,5 +1,4 @@
 import 'dart:developer';
-import 'dart:ffi';
 
 import 'package:codecrush_hackathon/constants/custom_icons.dart';
 import 'package:codecrush_hackathon/extensions/hexcode_extension.dart';

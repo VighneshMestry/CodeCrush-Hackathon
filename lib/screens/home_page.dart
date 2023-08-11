@@ -112,7 +112,7 @@ class _HomePageState extends State<HomePage> {
         appBar: AppBar(
           toolbarHeight: 70,
           title: Image.asset(
-            'Logo.png',
+            'assets/Logo.png',
             height: 70,
             width: 150,
           ),
