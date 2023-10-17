@@ -8,6 +8,7 @@ class AuthService {
     try {
       Uri url = Uri.parse(
           'https://codecrush-server.onrender.com/api/transaction/alltransactions');
+          
       var response = await http.get(
         url,
         headers: {"Content_Type": "application/json"},
