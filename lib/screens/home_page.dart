@@ -7,8 +7,6 @@ import 'package:codecrush_hackathon/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:searchbar_animation/const/dimensions.dart';
 import 'package:searchbar_animation/searchbar_animation.dart';
-import 'package:url_launcher/url_launcher.dart';
-
 import '../extensions/hexcode_extension.dart';
 
 class HomePage extends StatefulWidget {
@@ -147,8 +145,6 @@ class _HomePageState extends State<HomePage> {
                   ((context, AsyncSnapshot<List<ProductDetails>> snapshot) {
                 log("message");
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  log('______________________________________' +
-                      snapshot.data.toString());
                   fetchList(snapshot.data);
 
                   return const Center(child: CircularProgressIndicator());
@@ -181,24 +177,24 @@ class _HomePageState extends State<HomePage> {
                                     productDetails: p,
                                   ),
                                   onTap: () {
-                                    ProductDetails productDetails =
-                                        ProductDetails(
-                                      productName: p.productName,
-                                      productCategory: p.productCategory,
-                                      id: p.id,
-                                      productId: p.productId,
-                                      ownerId: p.ownerId,
-                                      status: p.status,
-                                      ownerLocation: p.ownerLocation,
-                                      buyerName: p.buyerName,
-                                      buyerLocation: p.buyerLocation,
-                                      buyerPhone: p.buyerPhone,
-                                      distance: p.distance,
-                                      orderDate: p.orderDate,
-                                      ownerName: p.ownerName,
-                                      ownerPhone: p.ownerPhone,
-                                      v: 0,
-                                    );
+                                    // ProductDetails productDetails =
+                                    //     ProductDetails(
+                                    //   productName: p.productName,
+                                    //   productCategory: p.productCategory,
+                                    //   id: p.id,
+                                    //   productId: p.productId,
+                                    //   ownerId: p.ownerId,
+                                    //   status: p.status,
+                                    //   ownerLocation: p.ownerLocation,
+                                    //   buyerName: p.buyerName,
+                                    //   buyerLocation: p.buyerLocation,
+                                    //   buyerPhone: p.buyerPhone,
+                                    //   distance: p.distance,
+                                    //   orderDate: p.orderDate,
+                                    //   ownerName: p.ownerName,
+                                    //   ownerPhone: p.ownerPhone,
+                                    //   v: 0,
+                                    // );
                                     // Navigator.push(
                                     //   context,
                                     //   MaterialPageRoute(

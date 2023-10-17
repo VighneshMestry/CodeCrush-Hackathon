@@ -8,15 +8,12 @@ class AuthService {
     try {
       Uri url = Uri.parse(
           'https://codecrush-server.onrender.com/api/transaction/alltransactions');
-      log('+++++++++++++++++++++++');
       var response = await http.get(
         url,
         headers: {"Content_Type": "application/json"},
       );
-      log('-------------------------------');
 
       if (response.statusCode == 200) {
-        log(response.body.toString() + "_________________________________________");
         return jsonDecode(response.body);
       } else {
         throw Exception();
