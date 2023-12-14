@@ -14,7 +14,7 @@ import '../model/product_model.dart';
 // final currentCar = carList.cars[0];
 
 class MyApp extends StatelessWidget {
-  ProductDetails productDetails;
+  final ProductDetails productDetails;
   MyApp({super.key, required this.productDetails});
 
   // This widget is the root of your application.
@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MainApp extends StatefulWidget {
-  ProductDetails productDetails;
+  final ProductDetails productDetails;
   MainApp({super.key, required this.productDetails});
 
   @override
@@ -78,7 +78,7 @@ class _MainAppState extends State<MainApp> {
 }
 
 class LayoutStart extends StatelessWidget {
-  ProductDetails productDetails;
+  final ProductDetails productDetails;
   LayoutStart({super.key, required this.productDetails});
 
   @override
@@ -95,7 +95,7 @@ class LayoutStart extends StatelessWidget {
 }
 
 class CarDetailsAnimation extends StatefulWidget {
-  ProductDetails productDetails;
+  final ProductDetails productDetails;
   CarDetailsAnimation({super.key, required this.productDetails});
 
   @override
@@ -163,7 +163,7 @@ class _CarDetailsAnimationState extends State<CarDetailsAnimation>
 }
 
 class CarDetails extends StatelessWidget {
-  ProductDetails productDetails;
+  final ProductDetails productDetails;
   CarDetails({super.key, required this.productDetails});
 
   @override
@@ -223,7 +223,7 @@ class CarDetails extends StatelessWidget {
 }
 
 class CarCarousel extends StatefulWidget {
-  ProductDetails productDetails;
+  final ProductDetails productDetails;
   CarCarousel({super.key, required this.productDetails});
 
   @override
@@ -308,7 +308,7 @@ class _CarCarouselState extends State<CarCarousel> {
 }
 
 class _CustomBottomSheet extends StatefulWidget {
-  ProductDetails productDetails;
+  final ProductDetails productDetails;
   _CustomBottomSheet({super.key, required this.productDetails});
 
   @override
@@ -380,7 +380,7 @@ class __CustomBottomSheetState extends State<_CustomBottomSheet>
 }
 
 class SheetContainer extends StatelessWidget {
-  ProductDetails productDetails;
+  final ProductDetails productDetails;
   SheetContainer({super.key, required this.productDetails});
 
   @override

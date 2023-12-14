@@ -12,7 +12,7 @@ import 'package:qrscan/qrscan.dart' as scanner;
 import 'custom_dialog.dart';
 
 class CustomListTile extends StatefulWidget {
-  ProductDetails productDetails;
+  final ProductDetails productDetails;
 
   CustomListTile({super.key, required this.productDetails});
 
@@ -274,10 +274,10 @@ class _CustomListTileState extends State<CustomListTile> {
                         onPressed: () async {
                           var distance =
                               stringToInteger(widget.productDetails.distance);
-                          double petrolEmission = carbonPetrolConsumption(distance);
-                          double evEmission = carbonElectricConsumption(distance);
-                          var finalPetrolEmission = num.parse(petrolEmission.toStringAsFixed(2));
-                          var finalElectricEmission = num.parse(evEmission.toStringAsFixed(2));
+                          // double petrolEmission = carbonPetrolConsumption(distance);
+                          // double evEmission = carbonElectricConsumption(distance);
+                          // var finalPetrolEmission = num.parse(petrolEmission.toStringAsFixed(2));
+                          // var finalElectricEmission = num.parse(evEmission.toStringAsFixed(2));
                           int dist = stringToInteger(widget.productDetails.distance);
                           String mode = dist <= 100
                               ? "Electric Vehicle"
