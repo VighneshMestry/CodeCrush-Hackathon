@@ -181,43 +181,48 @@ class CarDetails extends StatelessWidget {
   }
 
   _carTitle(ProductDetails productDetails) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        RichText(
-          text: TextSpan(
-            style: const TextStyle(color: Colors.white, fontSize: 38),
-            children: [
-              TextSpan(
-                  text: productDetails.productName,
-                  style: const TextStyle(fontWeight: FontWeight.w700)),
-              const TextSpan(text: "\n"),
-              TextSpan(
-                  text: productDetails.productCategory, style: const TextStyle(fontSize: 32)),
-            ],
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.grey[300],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          RichText(
+            text: TextSpan(
+              style: const TextStyle(color: Colors.white, fontSize: 38),
+              children: [
+                TextSpan(
+                    text: productDetails.productName,
+                    style: const TextStyle(fontWeight: FontWeight.w700)),
+                const TextSpan(text: "\n"),
+                TextSpan(
+                    text: productDetails.productCategory, style: const TextStyle(fontSize: 32)),
+              ],
+            ),
           ),
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-        // RichText(
-        //   text: TextSpan(
-        //     style: const TextStyle(fontSize: 16),
-        //     children: [
-        //       TextSpan(
-        //         text: '123',
-        //         style: TextStyle(
-        //           color: Colors.grey[20],
-        //         ),
-        //       ),
-        //       const TextSpan(
-        //         text: " / day",
-        //         style: TextStyle(color: Colors.grey),
-        //       )
-        //     ],
-        //   ),
-        // )
-      ],
+          const SizedBox(
+            height: 10,
+          ),
+          // RichText(
+          //   text: TextSpan(
+          //     style: const TextStyle(fontSize: 16),
+          //     children: [
+          //       TextSpan(
+          //         text: '123',
+          //         style: TextStyle(
+          //           color: Colors.grey[20],
+          //         ),
+          //       ),
+          //       const TextSpan(
+          //         text: " / day",
+          //         style: TextStyle(color: Colors.grey),
+          //       )
+          //     ],
+          //   ),
+          // )
+        ],
+      ),
     );
   }
 }
