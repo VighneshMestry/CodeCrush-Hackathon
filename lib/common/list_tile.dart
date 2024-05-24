@@ -193,7 +193,7 @@ class _CustomListTileState extends State<CustomListTile> {
                 children: [
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: HexColor.fromHex('#228b22'),
+                      backgroundColor: HexColor.fromHex('#229954'),
                     ),
                     onPressed: () async {
                       await _launchUrl(widget.productDetails.ownerLocation);
@@ -207,7 +207,7 @@ class _CustomListTileState extends State<CustomListTile> {
                         SizedBox(
                           width: 10,
                         ),
-                        Text("Pickup Location"),
+                        Text("Pickup Location", style: TextStyle(color: Colors.black),),
                       ],
                     ),
                   ),
@@ -216,7 +216,7 @@ class _CustomListTileState extends State<CustomListTile> {
                   ),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: HexColor.fromHex('#228b22'),
+                      backgroundColor: HexColor.fromHex('#229954'),
                     ),
                     onPressed: () async {
                       await _launchUrl(widget.productDetails.buyerLocation);
@@ -230,7 +230,7 @@ class _CustomListTileState extends State<CustomListTile> {
                         SizedBox(
                           width: 5,
                         ),
-                        Text("Delivery Location"),
+                        Text("Delivery Location", style: TextStyle(color: Colors.black),),
                       ],
                     ),
                   ),
@@ -241,7 +241,7 @@ class _CustomListTileState extends State<CustomListTile> {
                     children: [
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                            backgroundColor: HexColor.fromHex('#475865')),
+                            backgroundColor: HexColor.fromHex('#95A5A6')),
                         onPressed: () async {
                           await _qrScanner();
                         },
@@ -250,7 +250,7 @@ class _CustomListTileState extends State<CustomListTile> {
                             Icon(
                               Icons.qr_code,
                             ),
-                            Text('Scan'),
+                            Text('Scan', style: TextStyle(color: Colors.black),),
                           ],
                         ),
                       ),
@@ -269,7 +269,7 @@ class _CustomListTileState extends State<CustomListTile> {
                       // ),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: HexColor.fromHex('#475865'),
+                          backgroundColor: HexColor.fromHex('#95A5A6'),
                         ),
                         onPressed: () async {
                           var distance =
@@ -317,11 +317,11 @@ class _CustomListTileState extends State<CustomListTile> {
                               width: 5,
                             ),
                             Text(stringToDecimal(
-                                widget.productDetails.distance)),
+                                widget.productDetails.distance), style: TextStyle(color: Colors.black),),
                             const SizedBox(
                               width: 2,
                             ),
-                            const Text('km'),
+                            const Text('km', style: TextStyle(color: Colors.black),),
                           ],
                         ),
                       ),

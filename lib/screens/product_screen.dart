@@ -181,48 +181,43 @@ class CarDetails extends StatelessWidget {
   }
 
   _carTitle(ProductDetails productDetails) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.grey[300],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          RichText(
-            text: TextSpan(
-              style: const TextStyle(color: Colors.white, fontSize: 38),
-              children: [
-                TextSpan(
-                    text: productDetails.productName,
-                    style: const TextStyle(fontWeight: FontWeight.w700)),
-                const TextSpan(text: "\n"),
-                TextSpan(
-                    text: productDetails.productCategory, style: const TextStyle(fontSize: 32)),
-              ],
-            ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        RichText(
+          text: TextSpan(
+            style: const TextStyle(color: Colors.white, fontSize: 38),
+            children: [
+              TextSpan(
+                  text: productDetails.productName,
+                  style: const TextStyle(fontWeight: FontWeight.w700)),
+              const TextSpan(text: "\n"),
+              TextSpan(
+                  text: productDetails.productCategory, style: const TextStyle(fontSize: 32)),
+            ],
           ),
-          const SizedBox(
-            height: 10,
-          ),
-          // RichText(
-          //   text: TextSpan(
-          //     style: const TextStyle(fontSize: 16),
-          //     children: [
-          //       TextSpan(
-          //         text: '123',
-          //         style: TextStyle(
-          //           color: Colors.grey[20],
-          //         ),
-          //       ),
-          //       const TextSpan(
-          //         text: " / day",
-          //         style: TextStyle(color: Colors.grey),
-          //       )
-          //     ],
-          //   ),
-          // )
-        ],
-      ),
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+        // RichText(
+        //   text: TextSpan(
+        //     style: const TextStyle(fontSize: 16),
+        //     children: [
+        //       TextSpan(
+        //         text: '123',
+        //         style: TextStyle(
+        //           color: Colors.grey[20],
+        //         ),
+        //       ),
+        //       const TextSpan(
+        //         text: " / day",
+        //         style: TextStyle(color: Colors.grey),
+        //       )
+        //     ],
+        //   ),
+        // )
+      ],
     );
   }
 }
@@ -236,7 +231,7 @@ class CarCarousel extends StatefulWidget {
 }
 
 class _CarCarouselState extends State<CarCarousel> {
-  static final List<String> imgList = ['fruits.jpg'];
+  static final List<String> imgList = ['assets/fruits.jpg'];
 
   
   // final List<Widget> child = _map<Widget>(imgList, (index, String assetName) {
@@ -259,7 +254,7 @@ class _CarCarouselState extends State<CarCarousel> {
     return Column(
       children: [
         Container(
-          height: 252,
+          height: 300,
           child: PageView.builder(
             controller: PageController(viewportFraction: 1.0),
             itemCount: 1,
@@ -272,12 +267,12 @@ class _CarCarouselState extends State<CarCarousel> {
               return Column(
                 children: [
                   Container(
-                    height: 250,
+                    height: 300,
                     width: MediaQuery.of(context).size.width,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(15),
                       image: DecorationImage(
-                          image: AssetImage(imgList[i]), fit: BoxFit.fill),
+                          image: AssetImage(imgList[i]), fit: BoxFit.cover),
                     ),
                   ),
                 ],
@@ -461,7 +456,7 @@ class SheetContainer extends StatelessWidget {
         children: [
           Container(
             margin: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
-            decoration: BoxDecoration(border: Border.all(color: Colors.black)),
+            // decoration: BoxDecoration(border: Border.all(color: Colors.black)),
             padding: const EdgeInsets.all(8),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -530,7 +525,7 @@ class SheetContainer extends StatelessWidget {
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.all(4),
-                          backgroundColor: HexColor.fromHex('#228b22'),
+                          backgroundColor: HexColor.fromHex('#229954'),
                           minimumSize: const Size(120, 20),
                         ),
                         onPressed: () async {
@@ -545,7 +540,7 @@ class SheetContainer extends StatelessWidget {
                             SizedBox(
                               width: 10,
                             ),
-                            Text("Drop Location"),
+                            Text("Drop Location", style: TextStyle(color: Colors.black)),
                           ],
                         ),
                       ),
@@ -576,7 +571,7 @@ class SheetContainer extends StatelessWidget {
         children: [
           Container(
             margin: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
-            decoration: BoxDecoration(border: Border.all(color: Colors.black)),
+            // decoration: BoxDecoration(border: Border.all(color: Colors.black)),
             padding: const EdgeInsets.all(8),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -672,7 +667,6 @@ class SheetContainer extends StatelessWidget {
 
   sellerDetails(double sheetItemHeight, ProductDetails productDetails) {
     return Container(
-      // height: sheetItemHeight,
       padding: const EdgeInsets.only(top: 15, left: 10),
       child: ExpansionTile(
         title: const Text(
@@ -686,7 +680,7 @@ class SheetContainer extends StatelessWidget {
         children: [
           Container(
             margin: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
-            decoration: BoxDecoration(border: Border.all(color: Colors.black)),
+            // decoration: BoxDecoration(border: Border.all(color: Colors.black)),
             padding: const EdgeInsets.all(8),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -767,7 +761,7 @@ class SheetContainer extends StatelessWidget {
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.all(4),
-                          backgroundColor: HexColor.fromHex('#228b22'),
+                          backgroundColor: HexColor.fromHex('#229954'),
                           minimumSize: const Size(120, 20),
                         ),
                         onPressed: () async {
@@ -782,7 +776,7 @@ class SheetContainer extends StatelessWidget {
                             SizedBox(
                               width: 10,
                             ),
-                            Text("Pickup Location"),
+                            Text("Pickup Location", style: TextStyle(color: Colors.black)),
                           ],
                         ),
                       ),
@@ -824,7 +818,6 @@ class ListItem extends StatelessWidget {
       height: sheetItemHeight,
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: Colors.white,
         borderRadius: BorderRadius.circular(15),
       ),
       child: Column(
